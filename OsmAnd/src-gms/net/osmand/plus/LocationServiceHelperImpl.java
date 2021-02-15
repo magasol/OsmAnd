@@ -13,7 +13,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 
 import net.osmand.PlatformUtil;
 import net.osmand.plus.helpers.DayNightHelper;
@@ -21,10 +20,13 @@ import net.osmand.plus.helpers.LocationServiceHelper;
 
 import org.apache.commons.logging.Log;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.Locale;
 
 public class LocationServiceHelperImpl extends LocationServiceHelper {
 
@@ -77,12 +79,12 @@ public class LocationServiceHelperImpl extends LocationServiceHelper {
 				LocationCallback locationCallback = LocationServiceHelperImpl.this.locationCallback;
 				if (locationCallback != null) {
 					if (locationResult != null) {
-						LOG.debug("!!!! RESULT = " + locationResult.getLocations().size());
+						writeToFile("!!!! RESULT = " + locationResult.getLocations().size());
 						for (Location location : locationResult.getLocations()) {
-							LOG.debug("!!!! " + location.toString());
+							writeToFile("!!!! " + location.toString());
 						}
 					} else {
-						LOG.debug("!!!! NO RESULT");
+						writeToFile("!!!! NO RESULT");
 					}
 					Location location = locationResult != null ? locationResult.getLastLocation() : null;
 					net.osmand.Location l = convertLocation(location);
@@ -100,6 +102,24 @@ public class LocationServiceHelperImpl extends LocationServiceHelper {
 				}
 			}
 		};
+	}
+
+	private void writeToFile(String data) {
+		try {
+			File file = app.getAppPath("location.log");
+			FileWriter out = new FileWriter(file, true);
+			out.write(getDate(System.currentTimeMillis()) + ": " + data + "\n");
+			out.close();
+		} catch (IOException e) {
+		}
+	}
+
+	private static String getDate(long milliSeconds)
+	{
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS", Locale.US);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(milliSeconds);
+		return formatter.format(calendar.getTime());
 	}
 
 	@Override
