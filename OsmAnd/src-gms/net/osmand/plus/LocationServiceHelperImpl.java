@@ -76,6 +76,14 @@ public class LocationServiceHelperImpl extends LocationServiceHelper {
 			public void onLocationResult(LocationResult locationResult) {
 				LocationCallback locationCallback = LocationServiceHelperImpl.this.locationCallback;
 				if (locationCallback != null) {
+					if (locationResult != null) {
+						LOG.debug("!!!! RESULT = " + locationResult.getLocations().size());
+						for (Location location : locationResult.getLocations()) {
+							LOG.debug("!!!! " + location.toString());
+						}
+					} else {
+						LOG.debug("!!!! NO RESULT");
+					}
 					Location location = locationResult != null ? locationResult.getLastLocation() : null;
 					net.osmand.Location l = convertLocation(location);
 					locationCallback.onLocationResult(l == null
