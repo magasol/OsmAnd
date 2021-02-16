@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import net.osmand.PlatformUtil;
-import net.osmand.plus.helpers.DayNightHelper;
 import net.osmand.plus.helpers.LocationServiceHelper;
 
 import org.apache.commons.logging.Log;
@@ -30,7 +29,7 @@ import java.util.Locale;
 
 public class LocationServiceHelperImpl extends LocationServiceHelper {
 
-	private static final Log LOG = PlatformUtil.getLog(DayNightHelper.class);
+	private static final Log LOG = PlatformUtil.getLog(LocationServiceHelperImpl.class);
 
 	private final OsmandApplication app;
 
@@ -61,7 +60,7 @@ public class LocationServiceHelperImpl extends LocationServiceHelper {
 				// IMPORTANT NOTE: Apps running on Android 8.0 and higher devices (regardless of
 				// targetSdkVersion) may receive updates less frequently than this interval when the app
 				// is no longer in the foreground.
-				.setInterval(100)
+				.setInterval(0)
 
 				// Sets the fastest rate for active location updates. This interval is exact, and your
 				// application will never receive updates more frequently than this value.
@@ -69,7 +68,7 @@ public class LocationServiceHelperImpl extends LocationServiceHelper {
 
 				// Sets the maximum time when batched location updates are delivered. Updates may be
 				// delivered sooner than this interval.
-				.setMaxWaitTime(0)
+				//.setMaxWaitTime(5000)
 
 				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -79,12 +78,9 @@ public class LocationServiceHelperImpl extends LocationServiceHelper {
 				LocationCallback locationCallback = LocationServiceHelperImpl.this.locationCallback;
 				if (locationCallback != null) {
 					if (locationResult != null) {
-						writeToFile("!!!! RESULT = " + locationResult.getLocations().size());
 						for (Location location : locationResult.getLocations()) {
-							writeToFile("!!!! " + location.toString());
+							writeToFile(location.toString());
 						}
-					} else {
-						writeToFile("!!!! NO RESULT");
 					}
 					Location location = locationResult != null ? locationResult.getLastLocation() : null;
 					net.osmand.Location l = convertLocation(location);
