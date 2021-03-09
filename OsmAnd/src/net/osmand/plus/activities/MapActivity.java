@@ -1234,10 +1234,6 @@ public class MapActivity extends OsmandActionBarActivity implements DownloadEven
 		}
 	}
 
-	public OsmandApplication getMyApplication() {
-		return ((OsmandApplication) getApplication());
-	}
-
 	public void addDialogProvider(DialogProvider dp) {
 		dialogProviders.add(dp);
 	}

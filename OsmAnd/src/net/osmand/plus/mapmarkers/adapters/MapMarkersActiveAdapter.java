@@ -13,14 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.osmand.data.LatLon;
-import net.osmand.plus.mapmarkers.MapMarker;
-import net.osmand.plus.mapmarkers.MapMarkersGroup;
 import net.osmand.plus.OsmAndFormatter;
 import net.osmand.plus.R;
 import net.osmand.plus.UiUtilities;
 import net.osmand.plus.UiUtilities.UpdateLocationViewCache;
 import net.osmand.plus.activities.MapActivity;
-import net.osmand.util.Algorithms;
+import net.osmand.plus.mapmarkers.MapMarker;
 
 import java.util.Collections;
 import java.util.List;
@@ -137,9 +135,6 @@ public class MapMarkersActiveAdapter extends RecyclerView.Adapter<MapMarkerItemV
 		} else {
 			descr = OsmAndFormatter.getFormattedDate(mapActivity, marker.creationDate);
 		}
-		if (marker.wptPt != null && !Algorithms.isEmpty(marker.wptPt.category)) {
-			descr = marker.wptPt.category + ", " + descr;
-		}
 		holder.description.setText(descr);
 
 		holder.optionsBtn.setOnClickListener(new View.OnClickListener() {
@@ -214,11 +209,7 @@ public class MapMarkersActiveAdapter extends RecyclerView.Adapter<MapMarkerItemV
 		final int pos = holder.getAdapterPosition();
 		final MapMarker marker = getItem(pos);
 		mapActivity.getMyApplication().getMapMarkersHelper().moveMapMarkerToHistory(marker);
-		MapMarkersGroup group = mapActivity.getMyApplication().getMapMarkersHelper().getMapMarkerGroupById(marker.groupKey,
-				MapMarkersGroup.ANY_TYPE);
-		if (group != null) {
-			mapActivity.getMyApplication().getMapMarkersHelper().updateGroup(group);
-		}
+
 		changeMarkers();
 		notifyDataSetChanged();
 		snackbar = Snackbar.make(holder.itemView, R.string.marker_moved_to_history, Snackbar.LENGTH_LONG)

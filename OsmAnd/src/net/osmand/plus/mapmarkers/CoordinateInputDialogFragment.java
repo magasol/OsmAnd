@@ -167,14 +167,6 @@ public class CoordinateInputDialogFragment extends DialogFragment implements Osm
 		}
 	}
 
-	private void syncGpx(GPXFile gpxFile) {
-		MapMarkersHelper helper = getMyApplication().getMapMarkersHelper();
-		MapMarkersGroup group = helper.getMarkersGroup(gpxFile);
-		if (group != null) {
-			helper.runSynchronization(group);
-		}
-	}
-
 	protected void addWpt(GPXFile gpx, String description, String name, String category, int color, double lat, double lon) {
 		if (gpx != null) {
 			if (gpx.showCurrentTrack) {
@@ -204,7 +196,6 @@ public class CoordinateInputDialogFragment extends DialogFragment implements Osm
 			} else {
 				GPXFile gpx = getGpx();
 				new SaveGpxAsyncTask(getMyApplication(), gpx,null, false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				syncGpx(gpx);
 				if (listener != null) {
 					listener.onPointsSaved();
 				}
@@ -1089,7 +1080,6 @@ public class CoordinateInputDialogFragment extends DialogFragment implements Osm
 			public void saveGpx(final String fileName) {
 				new SaveGpxAsyncTask(app, getGpx(),fileName, false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				hasUnsavedChanges = false;
-				app.getMapMarkersHelper().addOrEnableGroup(getGpx());
 				if (listener != null) {
 					listener.onPointsSaved();
 				}

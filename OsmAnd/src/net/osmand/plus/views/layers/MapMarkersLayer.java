@@ -344,7 +344,7 @@ public class MapMarkersLayer extends OsmandMapLayer implements IContextMenuProvi
 
 		for (MapMarker marker : markersHelper.getMapMarkers()) {
 			if (isLocationVisible(tileBox, marker) && !overlappedByWaypoint(marker)
-					&& !isInMotion(marker) && !isSynced(marker)) {
+					&& !isInMotion(marker)) {
 				Bitmap bmp = getMapMarkerBitmap(marker.colorIndex);
 				int marginX = bmp.getWidth() / 6;
 				int marginY = bmp.getHeight();
@@ -393,10 +393,6 @@ public class MapMarkersLayer extends OsmandMapLayer implements IContextMenuProvi
 			canvas.drawBitmap(bitmap, locationX - marginX, locationY - marginY, bitmapPaint);
 
 		}
-	}
-
-	private boolean isSynced(@NonNull MapMarker marker) {
-		return marker.wptPt != null || marker.favouritePoint != null;
 	}
 
 	private boolean isInMotion(@NonNull MapMarker marker) {
@@ -542,7 +538,7 @@ public class MapMarkersLayer extends OsmandMapLayer implements IContextMenuProvi
 		boolean selectMarkerOnSingleTap = app.getSettings().SELECT_MARKER_ON_SINGLE_TAP.get();
 
 		for (MapMarker marker : app.getMapMarkersHelper().getMapMarkers()) {
-			if ((!unknownLocation && selectMarkerOnSingleTap) || !isSynced(marker)) {
+			if ((!unknownLocation && selectMarkerOnSingleTap)) {
 				LatLon latLon = marker.point;
 				if (latLon != null) {
 					int x = (int) tileBox.getPixXFromLatLon(latLon.getLatitude(), latLon.getLongitude());

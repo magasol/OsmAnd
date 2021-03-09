@@ -36,12 +36,12 @@ import androidx.core.content.ContextCompat;
 
 import net.osmand.AndroidUtils;
 import net.osmand.Location;
-import net.osmand.data.FavouritePoint;
 import net.osmand.data.LatLon;
 import net.osmand.data.PointDescription;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.FavouritesDbHelper;
-import net.osmand.plus.FavouritesDbHelper.FavoriteGroup;
 import net.osmand.plus.FavouritesDbHelper.FavoritesListener;
+import net.osmand.data.FavouritePoint;
 import net.osmand.plus.mapmarkers.MapMarkersHelper;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.settings.backend.OsmandPreference;
@@ -526,7 +526,6 @@ public class FavoritesTreeFragment extends OsmandExpandableListFragment implemen
 			for (Map.Entry<String, Set<FavouritePoint>> entry : favoritesSelected.entrySet()) {
 				FavoriteGroup group = helper.getGroup(entry.getKey());
 				if (group != null && entry.getValue().size() == group.getPoints().size()) {
-					markersHelper.addOrEnableGroup(group);
 				} else {
 					for (FavouritePoint fp : entry.getValue()) {
 						points.add(new LatLon(fp.getLatitude(), fp.getLongitude()));

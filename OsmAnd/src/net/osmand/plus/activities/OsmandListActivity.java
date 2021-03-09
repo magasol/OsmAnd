@@ -37,12 +37,6 @@ public abstract class OsmandListActivity extends
 		getListView().setDividerHeight(AndroidUtils.dpToPx(getMyApplication(), 1));
 	}
 
-
-	public OsmandApplication getMyApplication() {
-		return (OsmandApplication)getApplication();
-	}
-
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();

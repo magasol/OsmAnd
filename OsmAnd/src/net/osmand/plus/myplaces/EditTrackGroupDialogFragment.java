@@ -28,8 +28,6 @@ import net.osmand.AndroidUtils;
 import net.osmand.GPXUtilities;
 import net.osmand.GPXUtilities.GPXFile;
 import net.osmand.GPXUtilities.WptPt;
-import net.osmand.data.FavouritePoint;
-import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.GpxSelectionHelper;
 import net.osmand.plus.GpxSelectionHelper.GpxDisplayGroup;
 import net.osmand.plus.GpxSelectionHelper.GpxDisplayItem;
@@ -47,9 +45,10 @@ import net.osmand.plus.base.bottomsheetmenu.BaseBottomSheetItem;
 import net.osmand.plus.base.bottomsheetmenu.BottomSheetItemWithCompoundButton;
 import net.osmand.plus.base.bottomsheetmenu.SimpleBottomSheetItem;
 import net.osmand.plus.base.bottomsheetmenu.simpleitems.TitleItem;
+import net.osmand.data.FavouritePoint;
+import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.helpers.AndroidUiHelper;
 import net.osmand.plus.helpers.FontCache;
-import net.osmand.plus.mapmarkers.MapMarkersGroup;
 import net.osmand.plus.mapmarkers.MapMarkersHelper;
 import net.osmand.plus.measurementtool.OptionsDividerItem;
 import net.osmand.plus.myplaces.DeletePointsTask.OnPointsDeleteListener;
@@ -192,18 +191,18 @@ public class EditTrackGroupDialogFragment extends MenuBottomSheetDialogFragment 
 	}
 
 	private BaseBottomSheetItem createCopyToMarkersItem(final GPXFile gpxFile) {
-		MapMarkersGroup markersGroup = mapMarkersHelper.getMarkersGroup(gpxFile);
-		final boolean synced = markersGroup != null && (Algorithms.isEmpty(markersGroup.getWptCategories())
-				|| markersGroup.getWptCategories().contains(group.getName()));
-
+//		MapMarkersGroup markersGroup = mapMarkersHelper.getMarkersGroup(gpxFile);
+//		final boolean synced = markersGroup != null && (Algorithms.isEmpty(markersGroup.getWptCategories())
+//				|| markersGroup.getWptCategories().contains(group.getName()));
+//
 		return new SimpleBottomSheetItem.Builder()
-				.setIcon(getContentIcon(synced ? R.drawable.ic_action_delete_dark : R.drawable.ic_action_copy))
-				.setTitle(getString(synced ? R.string.remove_from_map_markers : R.string.copy_to_map_markers))
+//				.setIcon(getContentIcon(synced ? R.drawable.ic_action_delete_dark : R.drawable.ic_action_copy))
+//				.setTitle(getString(synced ? R.string.remove_from_map_markers : R.string.copy_to_map_markers))
 				.setLayoutId(R.layout.bottom_sheet_item_simple_pad_32dp)
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						updateGroupWptCategory(gpxFile, synced);
+//						updateGroupWptCategory(gpxFile, synced);
 						dismiss();
 					}
 				})
@@ -211,34 +210,33 @@ public class EditTrackGroupDialogFragment extends MenuBottomSheetDialogFragment 
 	}
 
 	private void updateGroupWptCategory(GPXFile gpxFile, boolean synced) {
-		SelectedGpxFile selectedGpxFile = selectedGpxHelper.getSelectedFileByPath(gpxFile.path);
-		if (selectedGpxFile == null) {
-			selectedGpxHelper.selectGpxFile(gpxFile, true, false, false, false, false);
-		}
-		boolean groupCreated = false;
-		MapMarkersGroup markersGroup = mapMarkersHelper.getMarkersGroup(gpxFile);
-		if (markersGroup == null) {
-			groupCreated = true;
-			markersGroup = mapMarkersHelper.addOrEnableGroup(gpxFile);
-		}
-		Set<String> categories = markersGroup.getWptCategories();
-		Set<String> selectedCategories = new HashSet<>();
-		if (categories != null) {
-			selectedCategories.addAll(categories);
-		}
-		if (synced) {
-			selectedCategories.remove(group.getName());
-		} else {
-			selectedCategories.add(group.getName());
-		}
-		if (Algorithms.isEmpty(selectedCategories)) {
-			mapMarkersHelper.removeMarkersGroup(markersGroup);
-		} else {
-			mapMarkersHelper.updateGroupWptCategories(markersGroup, selectedCategories);
-			if (!groupCreated) {
-				mapMarkersHelper.runSynchronization(markersGroup);
-			}
-		}
+//		SelectedGpxFile selectedGpxFile = selectedGpxHelper.getSelectedFileByPath(gpxFile.path);
+//		if (selectedGpxFile == null) {
+//			selectedGpxHelper.selectGpxFile(gpxFile, true, false, false, false, false);
+//		}
+//		boolean groupCreated = false;
+////		MapMarkersGroup markersGroup = mapMarkersHelper.getMarkersGroup(gpxFile);
+////		if (markersGroup == null) {
+////			groupCreated = true;
+////			markersGroup = mapMarkersHelper.addOrEnableGroup(gpxFile);
+////		}
+//		Set<String> categories = markersGroup.getWptCategories();
+//		Set<String> selectedCategories = new HashSet<>();
+//		if (categories != null) {
+//			selectedCategories.addAll(categories);
+//		}
+//		if (synced) {
+//			selectedCategories.remove(group.getName());
+//		} else {
+//			selectedCategories.add(group.getName());
+//		}
+//		if (Algorithms.isEmpty(selectedCategories)) {
+//			mapMarkersHelper.removeMarkersGroup(markersGroup);
+//		} else {
+//			mapMarkersHelper.updateGroupWptCategories(markersGroup, selectedCategories);
+//			if (!groupCreated) {
+//			}
+//		}
 	}
 
 	private BaseBottomSheetItem createCopyToFavoritesItem() {
@@ -502,11 +500,6 @@ public class EditTrackGroupDialogFragment extends MenuBottomSheetDialogFragment 
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-			GPXFile gpxFile = group.getGpx();
-			if (gpxFile != null && wasUpdated) {
-				syncGpx(gpxFile);
-			}
-
 			if (progressDialog != null && progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
@@ -520,14 +513,6 @@ public class EditTrackGroupDialogFragment extends MenuBottomSheetDialogFragment 
 				if (fragment != null) {
 					fragment.updateContent();
 				}
-			}
-		}
-
-		private void syncGpx(GPXFile gpxFile) {
-			MapMarkersHelper markersHelper = app.getMapMarkersHelper();
-			MapMarkersGroup group = markersHelper.getMarkersGroup(gpxFile);
-			if (group != null) {
-				markersHelper.runSynchronization(group);
 			}
 		}
 	}

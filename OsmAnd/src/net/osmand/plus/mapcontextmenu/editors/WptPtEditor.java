@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import net.osmand.GPXUtilities.GPXFile;
 import net.osmand.GPXUtilities.WptPt;
 import net.osmand.data.LatLon;
-import net.osmand.plus.FavouritesDbHelper;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.GpxSelectionHelper.SelectedGpxFile;
 import net.osmand.plus.activities.MapActivity;
 
@@ -96,7 +96,7 @@ public class WptPtEditor extends PointEditor {
 		wpt.name = title;
 
 		if (categoryName != null && !categoryName.isEmpty()) {
-			FavouritesDbHelper.FavoriteGroup category = mapActivity.getMyApplication()
+			FavoriteGroup category = mapActivity.getMyApplication()
 					.getFavorites()
 					.getGroup(categoryName);
 

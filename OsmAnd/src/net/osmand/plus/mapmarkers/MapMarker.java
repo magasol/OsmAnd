@@ -32,8 +32,6 @@ public class MapMarker implements LocationPoint {
 	public String nextKey;
 	public String groupKey;
 	public String groupName;
-	public WptPt wptPt;
-	public FavouritePoint favouritePoint;
 	public String mapObjectName;
 
 	public MapMarker(LatLon point, PointDescription name, int colorIndex, boolean selected, int index) {
@@ -45,9 +43,7 @@ public class MapMarker implements LocationPoint {
 	}
 
 	public int getType() {
-		return favouritePoint == null ?
-				(wptPt == null ? MapMarkersGroup.ANY_TYPE : MapMarkersGroup.GPX_TYPE) :
-				MapMarkersGroup.FAVORITES_TYPE;
+		return MapMarkersGroup.ANY_TYPE;
 	}
 
 	public PointDescription getPointDescription(Context ctx) {

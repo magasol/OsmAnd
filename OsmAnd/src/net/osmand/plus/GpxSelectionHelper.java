@@ -30,8 +30,6 @@ import net.osmand.plus.helpers.GpxUiHelper.GPXDataSetType;
 import net.osmand.plus.helpers.GpxUiHelper.GPXInfo;
 import net.osmand.plus.helpers.SearchHistoryHelper;
 import net.osmand.plus.helpers.enums.MetricsConstants;
-import net.osmand.plus.mapmarkers.MapMarkersGroup;
-import net.osmand.plus.mapmarkers.MapMarkersHelper;
 import net.osmand.plus.routing.GPXRouteParams.GPXRouteParamsBuilder;
 import net.osmand.plus.track.GpxSplitType;
 import net.osmand.util.Algorithms;
@@ -726,9 +724,6 @@ public class GpxSelectionHelper {
 				addRemoveSelected(show, sf);
 			}
 		}
-		if (syncGroup) {
-			syncGpxWithMarkers(gpx);
-		}
 		if (sf != null) {
 			sf.splitProcessed = false;
 		}
@@ -793,39 +788,23 @@ public class GpxSelectionHelper {
 	                                     boolean canAddToMarkers,
 	                                     boolean addToHistory) {
 		GpxDataItem dataItem = app.getGpxDbHelper().getItem(new File(gpx.path));
-		if (canAddToMarkers && show && dataItem != null && dataItem.isShowAsMarkers()) {
-			app.getMapMarkersHelper().addOrEnableGroup(gpx);
-		}
 		return selectGpxFile(gpx, dataItem, show, notShowNavigationDialog, syncGroup, selectedByUser, addToHistory);
 	}
 
 	public void clearPoints(GPXFile gpxFile) {
 		gpxFile.clearPoints();
-		syncGpxWithMarkers(gpxFile);
 	}
 
 	public void addPoint(WptPt point, GPXFile gpxFile) {
 		gpxFile.addPoint(point);
-		syncGpxWithMarkers(gpxFile);
 	}
 
 	public void addPoints(Collection<? extends WptPt> collection, GPXFile gpxFile) {
 		gpxFile.addPoints(collection);
-		syncGpxWithMarkers(gpxFile);
 	}
 
 	public boolean removePoint(WptPt point, GPXFile gpxFile) {
-		boolean res = gpxFile.deleteWptPt(point);
-		syncGpxWithMarkers(gpxFile);
-		return res;
-	}
-
-	private void syncGpxWithMarkers(GPXFile gpxFile) {
-		MapMarkersHelper mapMarkersHelper = app.getMapMarkersHelper();
-		MapMarkersGroup group = mapMarkersHelper.getMarkersGroup(gpxFile);
-		if (group != null) {
-			mapMarkersHelper.runSynchronization(group);
-		}
+		return gpxFile.deleteWptPt(point);
 	}
 
 	public static class SelectedGpxFile {

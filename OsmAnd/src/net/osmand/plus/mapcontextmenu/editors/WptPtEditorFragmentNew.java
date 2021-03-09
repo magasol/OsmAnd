@@ -20,8 +20,6 @@ import net.osmand.data.FavouritePoint.BackgroundType;
 import net.osmand.data.LatLon;
 import net.osmand.data.WptLocationPoint;
 import net.osmand.plus.GpxSelectionHelper;
-import net.osmand.plus.mapmarkers.MapMarkersHelper;
-import net.osmand.plus.mapmarkers.MapMarkersGroup;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
 import net.osmand.plus.UiUtilities;
@@ -233,17 +231,6 @@ public class WptPtEditorFragmentNew extends PointEditorFragmentNew {
 		}
 	}
 
-	private void syncGpx(GPXFile gpxFile) {
-		OsmandApplication app = getMyApplication();
-		if (app != null) {
-			MapMarkersHelper helper = app.getMapMarkersHelper();
-			MapMarkersGroup group = helper.getMarkersGroup(gpxFile);
-			if (group != null) {
-				helper.runSynchronization(group);
-			}
-		}
-	}
-
 	private void doAddWpt(String name, String category, String description) {
 		WptPt wpt = getWpt();
 		WptPtEditor editor = getWptPtEditor();
@@ -272,7 +259,6 @@ public class WptPtEditorFragmentNew extends PointEditorFragmentNew {
 					addWpt(gpx, description, name, category, color, iconName, backgroundTypeName);
 					saveGpx(getMyApplication(), gpx, editor.isGpxSelected());
 				}
-				syncGpx(gpx);
 			}
 		}
 	}
@@ -283,7 +269,6 @@ public class WptPtEditorFragmentNew extends PointEditorFragmentNew {
 		if (wpt != null) {
 			this.wpt = gpx.addWptPt(wpt.getLatitude(), wpt.getLongitude(),
 					System.currentTimeMillis(), description, name, category, color, iconName, backgroundType);
-			syncGpx(gpx);
 		}
 	}
 
@@ -306,7 +291,6 @@ public class WptPtEditorFragmentNew extends PointEditorFragmentNew {
 							System.currentTimeMillis(), description, name, category, color, iconName, backgroundTypeName);
 					saveGpx(getMyApplication(), gpx, editor.isGpxSelected());
 				}
-				syncGpx(gpx);
 			}
 		}
 	}
@@ -335,7 +319,6 @@ public class WptPtEditorFragmentNew extends PointEditorFragmentNew {
 								gpx.deleteWptPt(wpt);
 								saveGpx(getMyApplication(), gpx, editor.isGpxSelected());
 							}
-							syncGpx(gpx);
 						}
 						saved = true;
 					}

@@ -18,7 +18,6 @@ import net.osmand.GPXUtilities.WptPt;
 import net.osmand.Location;
 import net.osmand.StateChangedListener;
 import net.osmand.data.Amenity;
-import net.osmand.data.FavouritePoint;
 import net.osmand.data.LatLon;
 import net.osmand.data.PointDescription;
 import net.osmand.data.TransportStop;
@@ -30,6 +29,7 @@ import net.osmand.plus.R;
 import net.osmand.plus.TargetPointsHelper.TargetPoint;
 import net.osmand.plus.TargetPointsHelper.TargetPointChangedListener;
 import net.osmand.plus.activities.MapActivity;
+import net.osmand.data.FavouritePoint;
 import net.osmand.plus.helpers.AndroidUiHelper;
 import net.osmand.plus.helpers.GpxUiHelper;
 import net.osmand.plus.mapcontextmenu.AdditionalActionsBottomSheetDialogFragment.ContextMenuItemClickListener;
@@ -49,7 +49,6 @@ import net.osmand.plus.mapcontextmenu.other.ShareMenu;
 import net.osmand.plus.mapmarkers.MapMarker;
 import net.osmand.plus.mapmarkers.MapMarkersHelper.MapMarkerChangedListener;
 import net.osmand.plus.monitoring.OsmandMonitoringPlugin;
-import net.osmand.plus.routing.RoutingHelper;
 import net.osmand.plus.settings.backend.ApplicationMode;
 import net.osmand.plus.transport.TransportStopRoute;
 import net.osmand.plus.views.OsmandMapLayer;
@@ -98,9 +97,6 @@ public class MapContextMenu extends MenuTitleController implements StateChangedL
 	private boolean appModeChanged;
 	private boolean appModeListenerAdded;
 	private boolean autoHide;
-
-	private int favActionIconId;
-	private int waypointActionIconId;
 
 	private MenuAction searchDoneAction;
 
@@ -865,70 +861,6 @@ public class MapContextMenu extends MenuTitleController implements StateChangedL
 		}
 	}
 
-	public int getFavActionIconId() {
-		return favActionIconId;
-	}
-
-	public int getFavActionStringId() {
-		MenuController menuController = getMenuController();
-		if (menuController != null) {
-			return menuController.getFavActionStringId();
-		}
-		return R.string.shared_string_add;
-	}
-
-	boolean isFavButtonEnabled() {
-		MenuController menuController = getMenuController();
-		if (menuController != null) {
-			return menuController.isFavButtonEnabled();
-		}
-		return true;
-	}
-
-	public int getWaypointActionIconId() {
-		return waypointActionIconId;
-	}
-
-	public int getWaypointActionStringId() {
-		MenuController menuController = getMenuController();
-		if (menuController != null) {
-			return menuController.getWaypointActionStringId();
-		}
-		return R.string.shared_string_marker;
-	}
-
-	public boolean isButtonWaypointEnabled() {
-		MenuController menuController = getMenuController();
-		if (menuController != null) {
-			return menuController.isWaypointButtonEnabled();
-		}
-		return true;
-	}
-
-	protected void acquireIcons() {
-		super.acquireIcons();
-		MenuController menuController = getMenuController();
-		if (menuController != null) {
-			favActionIconId = menuController.getFavActionIconId();
-			waypointActionIconId = menuController.getWaypointActionIconId();
-		} else {
-			favActionIconId = R.drawable.ic_action_favorite_stroke;
-			waypointActionIconId = R.drawable.ic_action_flag_stroke;
-		}
-	}
-
-	public int getFabIconId() {
-		int res = R.drawable.ic_action_gdirections_dark;
-		MapActivity mapActivity = getMapActivity();
-		if (mapActivity != null) {
-			RoutingHelper routingHelper = mapActivity.getMyApplication().getRoutingHelper();
-			if (routingHelper.isFollowingMode() || routingHelper.isRoutePlanningMode()) {
-				res = R.drawable.ic_action_waypoint;
-			}
-		}
-		return res;
-	}
-
 	public List<TransportStopRoute> getTransportStopRoutes() {
 		MenuController menuController = getMenuController();
 		if (menuController != null) {
@@ -998,8 +930,7 @@ public class MapContextMenu extends MenuTitleController implements StateChangedL
 					mapObjectName = amenity.getName() + "_" + amenity.getType().getKeyName();
 				}
 				LatLon latLon = getLatLon();
-				mapActivity.getMapActions().addMapMarker(latLon.getLatitude(), latLon.getLongitude(),
-						getPointDescriptionForMarker(), mapObjectName);
+				mapActivity.getMyApplication().getItineraryHelper().addItineraryItem(object, latLon, mapObjectName);
 				close();
 			}
 		}

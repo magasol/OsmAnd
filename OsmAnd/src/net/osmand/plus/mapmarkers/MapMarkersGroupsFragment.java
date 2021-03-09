@@ -233,22 +233,6 @@ public class MapMarkersGroupsFragment extends Fragment implements OsmAndCompassL
 							app.getMapMarkersHelper().moveMarkerToTop(marker);
 							updateAdapter();
 						} else {
-							FavouritePoint fav = marker.favouritePoint == null
-									? app.getFavorites().getVisibleFavByLatLon(marker.point)
-									: marker.favouritePoint;
-							if (fav != null) {
-								showMap(marker.point, fav.getPointDescription(mapActivity), fav);
-								return;
-							}
-
-							WptPt pt = marker.wptPt == null
-									? app.getSelectedGpxHelper().getVisibleWayPointByLatLon(marker.point)
-									: marker.wptPt;
-							if (pt != null) {
-								showMap(marker.point, new WptLocationPoint(pt).getPointDescription(mapActivity), pt);
-								return;
-							}
-
 							Amenity mapObj = mapActivity.getMapLayers().getMapMarkersLayer().getMapObjectByMarker(marker);
 							PointDescription desc = mapObj == null
 									? marker.getPointDescription(mapActivity)

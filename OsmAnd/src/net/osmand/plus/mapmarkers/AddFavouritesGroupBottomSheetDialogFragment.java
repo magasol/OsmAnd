@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.data.FavouritePoint;
 import net.osmand.plus.FavouritesDbHelper;
-import net.osmand.plus.FavouritesDbHelper.FavoriteGroup;
 import net.osmand.plus.FavouritesDbHelper.FavoritesListener;
 import net.osmand.plus.mapmarkers.adapters.FavouritesGroupsAdapter;
 import net.osmand.plus.mapmarkers.adapters.GroupsAdapter;
@@ -56,7 +56,6 @@ public class AddFavouritesGroupBottomSheetDialogFragment extends AddGroupBottomS
 		if (!group.isVisible()) {
 			favouritesDbHelper.editFavouriteGroup(group, group.getName(), group.getColor(), true);
 		}
-		getMyApplication().getMapMarkersHelper().addOrEnableGroup(group);
 		dismiss();
 	}
 }

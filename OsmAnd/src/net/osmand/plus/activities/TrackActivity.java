@@ -221,10 +221,6 @@ public class TrackActivity extends TabActivity {
 		new GPXFileLoaderTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void) null);
 	}
 
-	public OsmandApplication getMyApplication() {
-		return (OsmandApplication) getApplication();
-	}
-
 	@Override
 	protected void onPause() {
 		super.onPause();

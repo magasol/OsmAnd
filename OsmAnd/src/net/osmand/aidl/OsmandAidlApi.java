@@ -45,6 +45,7 @@ import net.osmand.aidlapi.info.AppInfoParams;
 import net.osmand.aidlapi.map.ALatLon;
 import net.osmand.aidlapi.map.ALocation;
 import net.osmand.aidlapi.navigation.ABlockedRoad;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.data.FavouritePoint;
 import net.osmand.data.LatLon;
 import net.osmand.data.PointDescription;
@@ -967,8 +968,8 @@ public class OsmandAidlApi {
 
 	boolean addFavoriteGroup(String name, String colorTag, boolean visible) {
 		FavouritesDbHelper favoritesHelper = app.getFavorites();
-		List<FavouritesDbHelper.FavoriteGroup> groups = favoritesHelper.getFavoriteGroups();
-		for (FavouritesDbHelper.FavoriteGroup g : groups) {
+		List<FavoriteGroup> groups = favoritesHelper.getFavoriteGroups();
+		for (FavoriteGroup g : groups) {
 			if (g.getName().equals(name)) {
 				return false;
 			}
@@ -983,8 +984,8 @@ public class OsmandAidlApi {
 
 	boolean removeFavoriteGroup(String name) {
 		FavouritesDbHelper favoritesHelper = app.getFavorites();
-		List<FavouritesDbHelper.FavoriteGroup> groups = favoritesHelper.getFavoriteGroups();
-		for (FavouritesDbHelper.FavoriteGroup g : groups) {
+		List<FavoriteGroup> groups = favoritesHelper.getFavoriteGroups();
+		for (FavoriteGroup g : groups) {
 			if (g.getName().equals(name)) {
 				favoritesHelper.deleteGroup(g);
 				return true;
@@ -995,8 +996,8 @@ public class OsmandAidlApi {
 
 	boolean updateFavoriteGroup(String prevGroupName, String newGroupName, String colorTag, boolean visible) {
 		FavouritesDbHelper favoritesHelper = app.getFavorites();
-		List<FavouritesDbHelper.FavoriteGroup> groups = favoritesHelper.getFavoriteGroups();
-		for (FavouritesDbHelper.FavoriteGroup g : groups) {
+		List<FavoriteGroup> groups = favoritesHelper.getFavoriteGroups();
+		for (FavoriteGroup g : groups) {
 			if (g.getName().equals(prevGroupName)) {
 				int color = 0;
 				if (!Algorithms.isEmpty(colorTag)) {

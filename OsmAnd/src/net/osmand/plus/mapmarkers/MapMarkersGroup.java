@@ -13,8 +13,6 @@ import java.util.Set;
 public class MapMarkersGroup {
 
 	public static final int ANY_TYPE = -1;
-	public static final int FAVORITES_TYPE = 0;
-	public static final int GPX_TYPE = 1;
 
 	public static final String MARKERS_SYNC_GROUP_ID = "markers_sync_group_id";
 

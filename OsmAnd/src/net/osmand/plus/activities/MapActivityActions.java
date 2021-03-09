@@ -100,7 +100,6 @@ import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_CONFIGURE_P
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_CONFIGURE_SCREEN_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_DASHBOARD_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_DIRECTIONS_ID;
-import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_TRIP_RECORDING_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_DIVIDER_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_DOWNLOAD_MAPS_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_HELP_ID;
@@ -113,6 +112,7 @@ import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_SEARCH_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_SETTINGS_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_SWITCH_PROFILE_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_TRAVEL_GUIDES_ID;
+import static net.osmand.aidlapi.OsmAndCustomizationConstants.DRAWER_TRIP_RECORDING_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.MAP_CONTEXT_MENU_ADD_GPX_WAYPOINT;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.MAP_CONTEXT_MENU_ADD_ID;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.MAP_CONTEXT_MENU_AVOID_ROAD;
@@ -371,11 +371,23 @@ public class MapActivityActions implements DialogProvider {
 				.setIcon(selectedObj instanceof FavouritePoint ? R.drawable.ic_action_edit_dark : R.drawable.ic_action_favorite_stroke)
 				.setOrder(10)
 				.createItem());
+		int iconId;
+		int titleId;
+		if (selectedObj instanceof MapMarker) {
+			iconId = R.drawable.ic_action_edit_dark;
+			titleId = R.string.shared_string_edit;
+		} else if (getMyApplication().getItineraryHelper().containsItemForObject(selectedObj)) {
+			iconId = R.drawable.ic_action_flag_stroke;
+			titleId = R.string.map_marker;
+		} else {
+			iconId = R.drawable.ic_action_flag_stroke;
+			titleId = R.string.add_to_itinerary;
+		}
 		adapter.addItem(itemBuilder
-				.setTitleId(selectedObj instanceof MapMarker ? R.string.shared_string_edit : R.string.shared_string_marker, mapActivity)
+				.setTitleId(titleId, mapActivity)
 				.setId(MAP_CONTEXT_MENU_MARKER_ID)
 				.setOrder(20)
-				.setIcon(selectedObj instanceof MapMarker ? R.drawable.ic_action_edit_dark : R.drawable.ic_action_flag_stroke)
+				.setIcon(iconId)
 				.createItem());
 		adapter.addItem(itemBuilder
 				.setTitleId(R.string.shared_string_share, mapActivity)
@@ -497,7 +509,7 @@ public class MapActivityActions implements DialogProvider {
 				} else if (standardId == R.string.shared_string_add || standardId == R.string.favourites_context_menu_edit) {
 					mapActivity.getContextMenu().hide();
 					mapActivity.getContextMenu().buttonFavoritePressed();
-				} else if (standardId == R.string.shared_string_marker || standardId == R.string.shared_string_edit) {
+				} else if (standardId == R.string.add_to_itinerary || standardId == R.string.shared_string_edit) {
 					mapActivity.getContextMenu().buttonWaypointPressed();
 				} else if (standardId == R.string.shared_string_share) {
 					mapActivity.getContextMenu().buttonSharePressed();
@@ -803,7 +815,7 @@ public class MapActivityActions implements DialogProvider {
 					}
 				}).createItem());
 
-		optionsMenuHelper.addItem(new ItemBuilder().setTitleId(R.string.map_markers, mapActivity)
+		optionsMenuHelper.addItem(new ItemBuilder().setTitleId(R.string.shared_string_itinerary, mapActivity)
 				.setId(DRAWER_MAP_MARKERS_ID)
 				.setIcon(R.drawable.ic_action_flag)
 				.setListener(new ItemClickListener() {
@@ -816,7 +828,7 @@ public class MapActivityActions implements DialogProvider {
 					}
 				}).createItem());
 
-		optionsMenuHelper.addItem(new ItemBuilder().setTitleId(R.string.shared_string_my_places, mapActivity)
+		optionsMenuHelper.addItem(new ItemBuilder().setTitleId(R.string.shared_string_my_data, mapActivity)
 				.setId(DRAWER_MY_PLACES_ID)
 				.setIcon(R.drawable.ic_action_favorite)
 				.setListener(new ItemClickListener() {

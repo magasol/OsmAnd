@@ -62,6 +62,7 @@ import net.osmand.access.AccessibilityAssistant;
 import net.osmand.access.NavigationInfo;
 import net.osmand.binary.BinaryMapIndexReader;
 import net.osmand.data.City;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.data.FavouritePoint;
 import net.osmand.data.LatLon;
 import net.osmand.data.PointDescription;
@@ -70,7 +71,6 @@ import net.osmand.osm.PoiCategory;
 import net.osmand.osm.PoiType;
 import net.osmand.plus.AppInitializer;
 import net.osmand.plus.AppInitializer.AppInitializeListener;
-import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.LockableViewPager;
 import net.osmand.plus.OsmAndFormatter;
 import net.osmand.plus.OsmAndLocationProvider.OsmAndCompassListener;
@@ -435,7 +435,7 @@ public class QuickSearchDialogFragment extends DialogFragment implements OsmAndC
 									reloadHistory();
 									hide();
 								} else if (word.getType() == ObjectType.FAVORITE_GROUP) {
-									FavouritesDbHelper.FavoriteGroup group = (FavouritesDbHelper.FavoriteGroup) word.getResult().object;
+									FavoriteGroup group = (FavoriteGroup) word.getResult().object;
 									if (group.getPoints().size() > 1) {
 										double left = 0, right = 0;
 										double top = 0, bottom = 0;

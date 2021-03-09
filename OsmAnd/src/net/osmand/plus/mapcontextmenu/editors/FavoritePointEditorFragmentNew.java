@@ -20,7 +20,7 @@ import net.osmand.data.FavouritePoint;
 import net.osmand.data.FavouritePoint.BackgroundType;
 import net.osmand.data.LatLon;
 import net.osmand.plus.FavouritesDbHelper;
-import net.osmand.plus.FavouritesDbHelper.FavoriteGroup;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
 import net.osmand.plus.UiUtilities;
@@ -487,7 +487,7 @@ public class FavoritePointEditorFragmentNew extends PointEditorFragmentNew {
 			if (lastUsedGroup != null) {
 				categories.add(lastUsedGroup.getDisplayName(app));
 			}
-			for (FavouritesDbHelper.FavoriteGroup fg : helper.getFavoriteGroups()) {
+			for (FavoriteGroup fg : helper.getFavoriteGroups()) {
 				if (!fg.equals(lastUsedGroup)) {
 					if (fg.isVisible()) {
 						categories.add(fg.getDisplayName(app));
@@ -513,7 +513,7 @@ public class FavoritePointEditorFragmentNew extends PointEditorFragmentNew {
 	public int getCategoryPointsCount(String category) {
 		FavouritesDbHelper helper = getHelper();
 		if (helper != null) {
-			for (FavouritesDbHelper.FavoriteGroup fg : getHelper().getFavoriteGroups()) {
+			for (FavoriteGroup fg : getHelper().getFavoriteGroups()) {
 				if (fg.getDisplayName(getMyApplication()).equals(category)) {
 					return fg.getPoints().size();
 				}
@@ -527,7 +527,7 @@ public class FavoritePointEditorFragmentNew extends PointEditorFragmentNew {
 	public int getCategoryColor(String category) {
 		FavouritesDbHelper helper = getHelper();
 		if (helper != null) {
-			for (FavouritesDbHelper.FavoriteGroup fg : getHelper().getFavoriteGroups()) {
+			for (FavoriteGroup fg : getHelper().getFavoriteGroups()) {
 				if (fg.getDisplayName(getMyApplication()).equals(category)) {
 					return fg.getColor();
 				}

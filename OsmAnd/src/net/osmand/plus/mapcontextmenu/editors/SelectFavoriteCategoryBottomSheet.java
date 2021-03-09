@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import net.osmand.AndroidUtils;
 import net.osmand.GPXUtilities;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
@@ -150,8 +151,8 @@ public class SelectFavoriteCategoryBottomSheet extends MenuBottomSheetDialogFrag
 				}
 			}
 		} else {
-			List<FavouritesDbHelper.FavoriteGroup> gs = favoritesHelper.getFavoriteGroups();
-			for (final FavouritesDbHelper.FavoriteGroup category : gs) {
+			List<FavoriteGroup> gs = favoritesHelper.getFavoriteGroups();
+			for (final FavoriteGroup category : gs) {
 				String favoriteCategoryCount;
 				if (Algorithms.isEmpty(category.getPoints())) {
 					favoriteCategoryCount = app.getString(R.string.shared_string_empty);

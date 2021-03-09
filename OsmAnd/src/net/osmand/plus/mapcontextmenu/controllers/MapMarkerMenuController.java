@@ -151,14 +151,4 @@ public class MapMarkerMenuController extends MenuController {
 	public boolean needStreetName() {
 		return !needTypeStr();
 	}
-
-	@Override
-	public int getWaypointActionIconId() {
-		return R.drawable.ic_action_edit_dark;
-	}
-
-	@Override
-	public int getWaypointActionStringId() {
-		return R.string.shared_string_edit;
-	}
 }

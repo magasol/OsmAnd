@@ -1,10 +1,10 @@
 package net.osmand.plus.activities;
 
+import android.os.Bundle;
 import android.view.MenuItem;
+
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
-
-import android.os.Bundle;
 
 
 public class FavoritesListActivity extends OsmandActionBarActivity {

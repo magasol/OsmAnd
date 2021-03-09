@@ -504,30 +504,6 @@ public abstract class MenuController extends BaseMenuController implements Colla
 		return false;
 	}
 
-	public int getFavActionIconId() {
-		return R.drawable.ic_action_favorite_stroke;
-	}
-
-	public int getFavActionStringId() {
-		return R.string.shared_string_add;
-	}
-
-	public boolean isFavButtonEnabled() {
-		return true;
-	}
-
-	public int getWaypointActionIconId() {
-		return R.drawable.ic_action_flag_stroke;
-	}
-
-	public int getWaypointActionStringId() {
-		return R.string.shared_string_marker;
-	}
-
-	public boolean isWaypointButtonEnabled() {
-		return true;
-	}
-
 	@NonNull
 	public String getTypeStr() {
 		return "";

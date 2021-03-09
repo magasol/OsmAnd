@@ -25,10 +25,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import net.osmand.AndroidUtils;
-import net.osmand.plus.FavouritesDbHelper;
-import net.osmand.plus.FavouritesDbHelper.FavoriteGroup;
-import net.osmand.plus.mapmarkers.MapMarkersHelper;
-import net.osmand.plus.mapmarkers.MapMarkersGroup;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
 import net.osmand.plus.UiUtilities;
@@ -38,8 +34,11 @@ import net.osmand.plus.base.bottomsheetmenu.BottomSheetItemWithCompoundButton;
 import net.osmand.plus.base.bottomsheetmenu.SimpleBottomSheetItem;
 import net.osmand.plus.base.bottomsheetmenu.simpleitems.DividerHalfItem;
 import net.osmand.plus.base.bottomsheetmenu.simpleitems.TitleItem;
+import net.osmand.plus.FavoriteGroup;
+import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.helpers.AndroidUiHelper;
 import net.osmand.plus.helpers.ColorDialogs;
+import net.osmand.plus.mapmarkers.MapMarkersHelper;
 import net.osmand.util.Algorithms;
 
 public class EditFavoriteGroupDialogFragment extends MenuBottomSheetDialogFragment {
@@ -179,27 +178,27 @@ public class EditFavoriteGroupDialogFragment extends MenuBottomSheetDialogFragme
 
 			final MapMarkersHelper markersHelper = app.getMapMarkersHelper();
 			final FavoriteGroup favGroup = this.group;
-			final MapMarkersGroup markersGr = markersHelper.getMarkersGroup(this.group);
-			final boolean synced = markersGr != null;
-
-			BaseBottomSheetItem markersGroupItem = new SimpleBottomSheetItem.Builder()
-					.setIcon(getContentIcon(synced ? R.drawable.ic_action_delete_dark : R.drawable.ic_action_flag))
-					.setTitle(getString(synced ? R.string.remove_from_map_markers : R.string.shared_string_add_to_map_markers))
-					.setLayoutId(R.layout.bottom_sheet_item_simple)
-					.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							if (synced) {
-								markersHelper.removeMarkersGroup(markersGr);
-							} else {
-								markersHelper.addOrEnableGroup(favGroup);
-							}
-							dismiss();
-							MapActivity.launchMapActivityMoveToTop(getActivity());
-						}
-					})
-					.create();
-			items.add(markersGroupItem);
+//			final MapMarkersGroup markersGr = markersHelper.getMarkersGroup(this.group);
+//			final boolean synced = markersGr != null;
+//
+//			BaseBottomSheetItem markersGroupItem = new SimpleBottomSheetItem.Builder()
+//					.setIcon(getContentIcon(synced ? R.drawable.ic_action_delete_dark : R.drawable.ic_action_flag))
+//					.setTitle(getString(synced ? R.string.remove_from_map_markers : R.string.shared_string_add_to_map_markers))
+//					.setLayoutId(R.layout.bottom_sheet_item_simple)
+//					.setOnClickListener(new View.OnClickListener() {
+//						@Override
+//						public void onClick(View view) {
+//							if (synced) {
+//								markersHelper.removeMarkersGroup(markersGr);
+//							} else {
+//								markersHelper.addOrEnableGroup(favGroup);
+//							}
+//							dismiss();
+//							MapActivity.launchMapActivityMoveToTop(getActivity());
+//						}
+//					})
+//					.create();
+//			items.add(markersGroupItem);
 
 			Drawable shareIcon = getContentIcon(R.drawable.ic_action_gshare_dark);
 			if (shareIcon != null) {

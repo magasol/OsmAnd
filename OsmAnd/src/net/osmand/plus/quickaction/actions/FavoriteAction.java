@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 
 import net.osmand.data.LatLon;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.GeocodingLookupService.AddressLookupRequest;
 import net.osmand.plus.GeocodingLookupService.OnAddressLookupResult;
@@ -154,7 +155,7 @@ public class FavoriteAction extends QuickAction {
 
 		} else if (helper.getFavoriteGroups().size() > 0) {
 
-			FavouritesDbHelper.FavoriteGroup group = helper.getFavoriteGroups().get(0);
+			FavoriteGroup group = helper.getFavoriteGroups().get(0);
 
 			int color = group.getColor() == 0 ? activity.getResources().getColor(R.color.color_favorite) : group.getColor();
 			categoryEdit.setText(group.getDisplayName(activity));

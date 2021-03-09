@@ -45,7 +45,6 @@ public class FavouritePointMenuController extends MenuController {
 		this.fav = fav;
 
 		final MapMarkersHelper markersHelper = mapActivity.getMyApplication().getMapMarkersHelper();
-		mapMarker = markersHelper.getMapMarker(fav);
 		if (mapMarker == null) {
 			mapMarker = markersHelper.getMapMarker(new LatLon(fav.getLatitude(), fav.getLongitude()));
 		}
@@ -135,11 +134,6 @@ public class FavouritePointMenuController extends MenuController {
 		}
 	}
 
-	@Override
-	public boolean isWaypointButtonEnabled() {
-		return mapMarker == null;
-	}
-
 	@NonNull
 	@Override
 	public String getNameStr() {
@@ -184,21 +178,6 @@ public class FavouritePointMenuController extends MenuController {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public int getFavActionIconId() {
-		return R.drawable.ic_action_edit_dark;
-	}
-
-	@Override
-	public int getFavActionStringId() {
-		return R.string.shared_string_edit;
-	}
-
-	@Override
-	public boolean isFavButtonEnabled() {
-		return !fav.isSpecialPoint();
 	}
 
 	@NonNull

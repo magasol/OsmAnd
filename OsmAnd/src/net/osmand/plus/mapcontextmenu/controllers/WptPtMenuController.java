@@ -36,7 +36,6 @@ public class WptPtMenuController extends MenuController {
 		super(menuBuilder, pointDescription, mapActivity);
 		this.wpt = wpt;
 		MapMarkersHelper markersHelper = mapActivity.getMyApplication().getMapMarkersHelper();
-		mapMarker = markersHelper.getMapMarker(wpt);
 		if (mapMarker == null) {
 			mapMarker = markersHelper.getMapMarker(new LatLon(wpt.lat, wpt.lon));
 		}
@@ -123,11 +122,6 @@ public class WptPtMenuController extends MenuController {
 		} else {
 			return getIcon(R.drawable.ic_action_group_name_16, isLight() ? R.color.icon_color_default_light : R.color.ctx_menu_bottom_view_icon_dark);
 		}
-	}
-
-	@Override
-	public boolean isWaypointButtonEnabled() {
-		return mapMarker == null;
 	}
 
 	@NonNull

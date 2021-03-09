@@ -425,7 +425,7 @@ public class MultimediaNotesFragment extends BaseSettingsFragment implements Cop
 
 	private void setupOpenNotesDescrPref() {
 		String menu = getString(R.string.shared_string_menu);
-		String myPlaces = getString(R.string.shared_string_my_places);
+		String myPlaces = getString(R.string.shared_string_my_data);
 		String notes = getString(R.string.notes);
 		String multimediaNotesPath = getString(R.string.ltr_or_rtl_triple_combine_via_dash, menu, myPlaces, notes);
 		String multimediaNotesPathDescr = getString(R.string.multimedia_notes_view_descr, multimediaNotesPath);

@@ -6,7 +6,7 @@ import net.osmand.plus.R;
 
 public enum ExportSettingsCategory {
 	SETTINGS(R.string.shared_string_settings),
-	MY_PLACES(R.string.shared_string_my_places),
+	MY_PLACES(R.string.shared_string_my_data),
 	RESOURCES(R.string.shared_string_resources);
 
 	@StringRes

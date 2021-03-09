@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import net.osmand.AndroidUtils;
 import net.osmand.GPXUtilities.GPXFile;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
@@ -88,8 +89,8 @@ public class SelectCategoryDialogFragment extends DialogFragment {
 				}
 			}
 		} else {
-			List<FavouritesDbHelper.FavoriteGroup> gs = helper.getFavoriteGroups();
-			for (final FavouritesDbHelper.FavoriteGroup category : gs) {
+			List<FavoriteGroup> gs = helper.getFavoriteGroups();
+			for (final FavoriteGroup category : gs) {
 				ll.addView(createCategoryItem(activity, nightMode, category.getDisplayName(getContext()),
 						category.getColor(), !category.isVisible()));
 			}

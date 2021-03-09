@@ -263,7 +263,7 @@ public class MonitoringSettingsFragment extends BaseSettingsFragment
 
 	private void setupOpenNotesDescrPref() {
 		String menu = getString(R.string.shared_string_menu);
-		String myPlaces = getString(R.string.shared_string_my_places);
+		String myPlaces = getString(R.string.shared_string_my_data);
 		String tracks = getString(R.string.shared_string_tracks);
 		String tracksPath = getString(R.string.ltr_or_rtl_triple_combine_via_dash, menu, myPlaces, tracks);
 		String tracksPathDescr = getString(R.string.tracks_view_descr, tracksPath);

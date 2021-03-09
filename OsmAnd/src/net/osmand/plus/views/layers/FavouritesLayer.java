@@ -16,7 +16,7 @@ import net.osmand.data.QuadRect;
 import net.osmand.data.QuadTree;
 import net.osmand.data.RotatedTileBox;
 import net.osmand.plus.FavouritesDbHelper;
-import net.osmand.plus.FavouritesDbHelper.FavoriteGroup;
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.plus.R;
 import net.osmand.plus.base.PointImageDrawable;
 import net.osmand.plus.mapmarkers.MapMarker;
@@ -85,9 +85,8 @@ public class FavouritesLayer extends OsmandMapLayer implements IContextMenuProvi
 		if (contextMenuLayer.getMoveableObject() instanceof FavouritePoint) {
 			FavouritePoint objectInMotion = (FavouritePoint) contextMenuLayer.getMoveableObject();
 			PointF pf = contextMenuLayer.getMovableCenterPoint(tileBox);
-			MapMarker mapMarker = mapMarkersHelper.getMapMarker(objectInMotion);
 			float textScale = this.settings.TEXT_SCALE.get();
-			drawBigPoint(canvas, objectInMotion, pf.x, pf.y, mapMarker, textScale);
+			drawBigPoint(canvas, objectInMotion, pf.x, pf.y, null, textScale);
 		}
 	}
 
@@ -106,7 +105,7 @@ public class FavouritesLayer extends OsmandMapLayer implements IContextMenuProvi
 				List<LatLon> smallObjectsLatLon = new ArrayList<>();
 				for (FavoriteGroup group : favouritesDbHelper.getFavoriteGroups()) {
 					List<Pair<FavouritePoint, MapMarker>> fullObjects = new ArrayList<>();
-					boolean synced = mapMarkersHelper.getMarkersGroup(group) != null;
+//					boolean synced = mapMarkersHelper.getMarkersGroup(group) != null;
 					for (FavouritePoint favoritePoint : group.getPoints()) {
 						double lat = favoritePoint.getLatitude();
 						double lon = favoritePoint.getLongitude();
@@ -114,11 +113,11 @@ public class FavouritesLayer extends OsmandMapLayer implements IContextMenuProvi
 								&& lat >= latLonBounds.bottom && lat <= latLonBounds.top
 								&& lon >= latLonBounds.left && lon <= latLonBounds.right) {
 							MapMarker marker = null;
-							if (synced) {
-								if ((marker = mapMarkersHelper.getMapMarker(favoritePoint)) == null) {
-									continue;
-								}
-							}
+//							if (synced) {
+//								if ((marker = mapMarkersHelper.getMapMarker(favoritePoint)) == null) {
+//									continue;
+//								}
+//							}
 							cache.add(favoritePoint);
 							float x = tileBox.getPixXFromLatLon(lat, lon);
 							float y = tileBox.getPixYFromLatLon(lat, lon);

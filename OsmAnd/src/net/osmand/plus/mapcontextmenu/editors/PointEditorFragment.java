@@ -32,12 +32,11 @@ import net.osmand.plus.R;
 import net.osmand.plus.UiUtilities;
 import net.osmand.plus.activities.MapActivity;
 import net.osmand.plus.base.BaseOsmAndFragment;
-import net.osmand.plus.base.BottomSheetDialogFragment;
 import net.osmand.plus.widgets.AutoCompleteTextViewEx;
 import net.osmand.util.Algorithms;
 
-import static net.osmand.plus.FavouritesDbHelper.FavoriteGroup.PERSONAL_CATEGORY;
-import static net.osmand.plus.FavouritesDbHelper.FavoriteGroup.isPersonalCategoryDisplayName;
+import static net.osmand.plus.FavoriteGroup.PERSONAL_CATEGORY;
+import static net.osmand.plus.FavoriteGroup.isPersonalCategoryDisplayName;
 
 public abstract class PointEditorFragment extends BaseOsmAndFragment {
 

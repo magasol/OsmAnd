@@ -47,7 +47,6 @@ import net.osmand.plus.base.PointImageDrawable;
 import net.osmand.plus.mapcontextmenu.controllers.SelectedGpxMenuController.SelectedGpxPoint;
 import net.osmand.plus.mapcontextmenu.other.TrackChartPoints;
 import net.osmand.plus.mapmarkers.MapMarker;
-import net.osmand.plus.mapmarkers.MapMarkersGroup;
 import net.osmand.plus.mapmarkers.MapMarkersHelper;
 import net.osmand.plus.render.OsmandRenderer;
 import net.osmand.plus.render.OsmandRenderer.RenderingContext;
@@ -234,9 +233,8 @@ public class GPXLayer extends OsmandMapLayer implements IContextMenuProvider, IM
 			SelectedGpxFile gpxFile = pointFileMap.get(objectInMotion);
 			if (gpxFile != null) {
 				PointF pf = contextMenuLayer.getMovableCenterPoint(tileBox);
-				MapMarker mapMarker = mapMarkersHelper.getMapMarker(objectInMotion);
 				float textScale = view.getSettings().TEXT_SCALE.get();
-				drawBigPoint(canvas, objectInMotion, getFileColor(gpxFile), pf.x, pf.y, mapMarker, textScale);
+				drawBigPoint(canvas, objectInMotion, getFileColor(gpxFile), pf.x, pf.y, null, textScale);
 			}
 		}
 	}
@@ -512,18 +510,18 @@ public class GPXLayer extends OsmandMapLayer implements IContextMenuProvider, IM
 			for (SelectedGpxFile g : selectedGPXFiles) {
 				List<Pair<WptPt, MapMarker>> fullObjects = new ArrayList<>();
 				int fileColor = getFileColor(g);
-				boolean synced = mapMarkersHelper.getMarkersGroup(g.getGpxFile()) != null;
+//				boolean synced = mapMarkersHelper.getMarkersGroup(g.getGpxFile()) != null;
 				for (WptPt wpt : getListStarPoints(g)) {
 					if (wpt.lat >= latLonBounds.bottom && wpt.lat <= latLonBounds.top
 							&& wpt.lon >= latLonBounds.left && wpt.lon <= latLonBounds.right
 							&& wpt != contextMenuLayer.getMoveableObject() && !isPointHidden(g, wpt)) {
 						pointFileMap.put(wpt, g);
 						MapMarker marker = null;
-						if (synced) {
-							if ((marker = mapMarkersHelper.getMapMarker(wpt)) == null) {
-								continue;
-							}
-						}
+//						if (synced) {
+//							if ((marker = mapMarkersHelper.getMapMarker(wpt)) == null) {
+//								continue;
+//							}
+//						}
 						cache.add(wpt);
 						float x = tileBox.getPixXFromLatLon(wpt.lat, wpt.lon);
 						float y = tileBox.getPixYFromLatLon(wpt.lat, wpt.lon);
@@ -1049,7 +1047,6 @@ public class GPXLayer extends OsmandMapLayer implements IContextMenuProvider, IM
 						position.getLongitude(), System.currentTimeMillis(), objectInMotion.desc,
 						objectInMotion.name, objectInMotion.category, objectInMotion.getColor(),
 						objectInMotion.getIconName(), objectInMotion.getBackgroundType());
-				syncGpx(gpxFile);
 				if (gpxFile.showCurrentTrack) {
 					if (callback != null) {
 						callback.onApplyMovedObject(true, objectInMotion);
@@ -1073,13 +1070,6 @@ public class GPXLayer extends OsmandMapLayer implements IContextMenuProvider, IM
 			}
 		} else if (callback != null) {
 			callback.onApplyMovedObject(false, o);
-		}
-	}
-
-	private void syncGpx(GPXFile gpxFile) {
-		MapMarkersGroup group = view.getApplication().getMapMarkersHelper().getMarkersGroup(gpxFile);
-		if (group != null) {
-			mapMarkersHelper.runSynchronization(group);
 		}
 	}
 }

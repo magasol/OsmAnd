@@ -23,15 +23,15 @@ import androidx.viewpager.widget.ViewPager;
 import net.osmand.GPXUtilities;
 import net.osmand.PlatformUtil;
 import net.osmand.data.PointDescription;
-import net.osmand.plus.OsmAndLocationProvider;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.OsmandPlugin;
 import net.osmand.plus.R;
-import net.osmand.plus.activities.FavoritesTreeFragment;
 import net.osmand.plus.activities.MapActivity;
 import net.osmand.plus.activities.TabActivity;
+import net.osmand.plus.activities.FavoritesTreeFragment;
 import net.osmand.plus.importfiles.ImportHelper;
 import net.osmand.plus.importfiles.ImportHelper.OnGpxImportCompleteListener;
+import net.osmand.plus.mapmarkers.MapMarkersFragment;
 import net.osmand.plus.settings.backend.OsmAndAppCustomization;
 import net.osmand.plus.settings.backend.OsmandSettings;
 import net.osmand.plus.views.controls.PagerSlidingTabStrip;
@@ -58,6 +58,7 @@ public class FavoritesActivity extends TabActivity {
 
 	public static final int GPX_TAB = R.string.shared_string_tracks;
 	public static final int FAV_TAB = R.string.shared_string_my_favorites;
+	public static final int MARKERS_TAB = R.string.shared_string_markers;
 
 	protected List<WeakReference<FavoritesFragmentStateHolder>> fragList = new ArrayList<>();
 	private int tabSize;
@@ -78,7 +79,7 @@ public class FavoritesActivity extends TabActivity {
 		importHelper = new ImportHelper(this, getMyApplication(), null);
 
 		//noinspection ConstantConditions
-		getSupportActionBar().setTitle(R.string.shared_string_my_places);
+		getSupportActionBar().setTitle(R.string.shared_string_my_data);
 		getSupportActionBar().setElevation(0);
 
 		setContentView(R.layout.tab_content);
@@ -199,6 +200,7 @@ public class FavoritesActivity extends TabActivity {
 		List<TabItem> mTabs = new ArrayList<>();
 		mTabs.add(getTabIndicator(FAV_TAB, FavoritesTreeFragment.class));
 		mTabs.add(getTabIndicator(GPX_TAB, AvailableGPXFragment.class));
+		mTabs.add(getTabIndicator(MARKERS_TAB, MapMarkersFragment.class));
 		OsmandPlugin.addMyPlacesTabPlugins(this, mTabs, getIntent());
 		return mTabs;
 	}
@@ -229,14 +231,6 @@ public class FavoritesActivity extends TabActivity {
 		if (mTabs.size() != tabSize) {
 			setTabs(mTabs);
 		}
-	}
-
-	public OsmandApplication getMyApplication() {
-		return (OsmandApplication) getApplication();
-	}
-
-	private OsmAndLocationProvider getLocationProvider() {
-		return getMyApplication().getLocationProvider();
 	}
 
 	@Override

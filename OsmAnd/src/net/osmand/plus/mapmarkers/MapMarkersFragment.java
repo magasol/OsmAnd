@@ -7,13 +7,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,31 +27,40 @@ import com.google.android.material.snackbar.Snackbar;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
 import net.osmand.plus.UiUtilities;
-import net.osmand.plus.activities.MapActivity;
+import net.osmand.plus.helpers.AndroidUiHelper;
+import net.osmand.plus.mapmarkers.HistoryMarkerMenuBottomSheetDialogFragment.HistoryMarkerMenuFragmentListener;
+import net.osmand.plus.mapmarkers.MapMarkersHelper.MapMarkerChangedListener;
 import net.osmand.plus.mapmarkers.adapters.MapMarkerHeaderViewHolder;
 import net.osmand.plus.mapmarkers.adapters.MapMarkerItemViewHolder;
 import net.osmand.plus.mapmarkers.adapters.MapMarkersHistoryAdapter;
+import net.osmand.plus.myplaces.FavoritesActivity;
+import net.osmand.plus.myplaces.FavoritesFragmentStateHolder;
 import net.osmand.plus.widgets.EmptyStateRecyclerView;
 
-public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHelper.MapMarkerChangedListener {
+import static net.osmand.plus.myplaces.FavoritesActivity.MARKERS_TAB;
+import static net.osmand.plus.myplaces.FavoritesActivity.TAB_ID;
 
-	private MapMarkersHistoryAdapter adapter;
+public class MapMarkersFragment extends Fragment implements MapMarkerChangedListener, FavoritesFragmentStateHolder {
+
 	private OsmandApplication app;
-	private Paint backgroundPaint = new Paint();
-	private Paint textPaint = new Paint();
+	private MapMarkersHistoryAdapter adapter;
+
+	private final Paint textPaint = new Paint();
+	private final Paint backgroundPaint = new Paint();
+
 	private Snackbar snackbar;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		app = getMyApplication();
+		app = (OsmandApplication) requireActivity().getApplication();
 	}
 
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		final boolean night = !app.getSettings().isLightContent();
-		final MapActivity mapActivity = (MapActivity) getActivity();
+		final FragmentActivity activity = getActivity();
 
 		backgroundPaint.setColor(ContextCompat.getColor(getActivity(), night ? R.color.divider_color_dark : R.color.divider_color_light));
 		backgroundPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -60,21 +73,22 @@ public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHel
 		final String activateStr = getString(R.string.local_index_mi_restore).toUpperCase();
 		Rect bounds = new Rect();
 
+		setHasOptionsMenu(true);
 		textPaint.getTextBounds(activateStr, 0, activateStr.length(), bounds);
 		final int activateStrWidth = bounds.width();
 		final int textHeight = bounds.height();
 
-		Fragment historyMarkerMenuFragment = mapActivity.getSupportFragmentManager().findFragmentByTag(HistoryMarkerMenuBottomSheetDialogFragment.TAG);
+		Fragment historyMarkerMenuFragment = activity.getSupportFragmentManager().findFragmentByTag(HistoryMarkerMenuBottomSheetDialogFragment.TAG);
 		if (historyMarkerMenuFragment != null) {
 			((HistoryMarkerMenuBottomSheetDialogFragment) historyMarkerMenuFragment).setListener(createHistoryMarkerMenuListener());
 		}
 
-		final View mainView = UiUtilities.getInflater(mapActivity, night).inflate(R.layout.fragment_map_markers_history, container, false);
+		final View mainView = UiUtilities.getInflater(activity, night).inflate(R.layout.fragment_map_markers_history, container, false);
 		final EmptyStateRecyclerView recyclerView = (EmptyStateRecyclerView) mainView.findViewById(R.id.list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-			private float marginSides = getResources().getDimension(R.dimen.list_content_padding);
+			private final float marginSides = getResources().getDimension(R.dimen.list_content_padding);
 			private boolean iconHidden;
 
 			@Override
@@ -174,7 +188,7 @@ public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHel
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
 		itemTouchHelper.attachToRecyclerView(recyclerView);
 
-		adapter = new MapMarkersHistoryAdapter(mapActivity.getMyApplication());
+		adapter = new MapMarkersHistoryAdapter(app);
 		adapter.setAdapterListener(new MapMarkersHistoryAdapter.MapMarkersHistoryAdapterListener() {
 			@Override
 			public void onItemClick(View view) {
@@ -189,12 +203,12 @@ public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHel
 					fragment.setUsedOnMap(false);
 					Bundle arguments = new Bundle();
 					arguments.putInt(HistoryMarkerMenuBottomSheetDialogFragment.MARKER_POSITION, pos);
-					arguments.putString(HistoryMarkerMenuBottomSheetDialogFragment.MARKER_NAME, marker.getName(mapActivity));
+					arguments.putString(HistoryMarkerMenuBottomSheetDialogFragment.MARKER_NAME, marker.getName(activity));
 					arguments.putInt(HistoryMarkerMenuBottomSheetDialogFragment.MARKER_COLOR_INDEX, marker.colorIndex);
 					arguments.putLong(HistoryMarkerMenuBottomSheetDialogFragment.MARKER_VISITED_DATE, marker.visitedDate);
 					fragment.setArguments(arguments);
 					fragment.setListener(createHistoryMarkerMenuListener());
-					fragment.show(mapActivity.getSupportFragmentManager(), HistoryMarkerMenuBottomSheetDialogFragment.TAG);
+					fragment.show(activity.getSupportFragmentManager(), HistoryMarkerMenuBottomSheetDialogFragment.TAG);
 				}
 			}
 		});
@@ -213,17 +227,8 @@ public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHel
 		return mainView;
 	}
 
-	void hideSnackbar() {
-		if (snackbar != null && snackbar.isShown()) {
-			snackbar.dismiss();
-		}
-		if (adapter != null) {
-			adapter.hideSnackbar();
-		}
-	}
-
-	private HistoryMarkerMenuBottomSheetDialogFragment.HistoryMarkerMenuFragmentListener createHistoryMarkerMenuListener() {
-		return new HistoryMarkerMenuBottomSheetDialogFragment.HistoryMarkerMenuFragmentListener() {
+	private HistoryMarkerMenuFragmentListener createHistoryMarkerMenuListener() {
+		return new HistoryMarkerMenuFragmentListener() {
 			@Override
 			public void onMakeMarkerActive(int pos) {
 				Object item = adapter.getItem(pos);
@@ -248,15 +253,21 @@ public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHel
 		super.onDestroy();
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
+		menu.clear();
+		if (AndroidUiHelper.isOrientationPortrait(getActivity())) {
+			menu = ((FavoritesActivity) getActivity()).getClearToolbar(true).getMenu();
+		} else {
+			((FavoritesActivity) getActivity()).getClearToolbar(false);
+		}
+	}
+
 	void updateAdapter() {
 		if (adapter != null) {
 			adapter.createHeaders();
 			adapter.notifyDataSetChanged();
 		}
-	}
-
-	public OsmandApplication getMyApplication() {
-		return (OsmandApplication) getActivity().getApplication();
 	}
 
 	@Override
@@ -267,5 +278,17 @@ public class MapMarkersHistoryFragment extends Fragment implements MapMarkersHel
 	@Override
 	public void onMapMarkersChanged() {
 		updateAdapter();
+	}
+
+	@Override
+	public Bundle storeState() {
+		Bundle bundle = new Bundle();
+		bundle.putInt(TAB_ID, MARKERS_TAB);
+		return bundle;
+	}
+
+	@Override
+	public void restoreState(Bundle bundle) {
+
 	}
 }

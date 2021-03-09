@@ -35,7 +35,6 @@ import net.osmand.plus.activities.MapActivity;
 import net.osmand.plus.mapmarkers.CoordinateInputDialogFragment.OnPointsSavedListener;
 import net.osmand.plus.mapmarkers.DirectionIndicationDialogFragment.DirectionIndicationFragmentListener;
 import net.osmand.plus.mapmarkers.MapMarkersHelper.MapMarkersSortByDef;
-import net.osmand.plus.mapmarkers.MapMarkersHelper.OnGroupSyncedListener;
 import net.osmand.plus.mapmarkers.OptionsBottomSheetDialogFragment.MarkerOptionsFragmentListener;
 import net.osmand.plus.mapmarkers.OrderByBottomSheetDialogFragment.OrderByFragmentListener;
 import net.osmand.plus.mapmarkers.SaveAsTrackBottomSheetDialogFragment.MarkerSaveAsTrackFragmentListener;
@@ -47,9 +46,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static net.osmand.plus.mapmarkers.OptionsBottomSheetDialogFragment.GROUPS_MARKERS_MENU;
-import static net.osmand.plus.mapmarkers.OptionsBottomSheetDialogFragment.HISTORY_MARKERS_MENU;
 
-public class MapMarkersDialogFragment extends DialogFragment implements OnGroupSyncedListener {
+public class MapMarkersDialogFragment extends DialogFragment {
 
 	public static final String TAG = "MapMarkersDialogFragment";
 
@@ -57,11 +55,9 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 
 	private static final int ACTIVE_MARKERS_POSITION = 0;
 	private static final int GROUPS_POSITION = 1;
-	private static final int HISTORY_MARKERS_POSITION = 2;
 
 	private MapMarkersActiveFragment activeFragment;
 	private MapMarkersGroupsFragment groupsFragment;
-	private MapMarkersHistoryFragment historyFragment;
 
 	private Snackbar snackbar;
 	private LockableViewPager viewPager;
@@ -109,8 +105,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 					activeFragment = (MapMarkersActiveFragment) fragment;
 				} else if (fragment instanceof MapMarkersGroupsFragment) {
 					groupsFragment = (MapMarkersGroupsFragment) fragment;
-				} else if (fragment instanceof MapMarkersHistoryFragment) {
-					historyFragment = (MapMarkersHistoryFragment) fragment;
 				}
 			}
 		}
@@ -119,9 +113,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 		}
 		if (groupsFragment == null) {
 			groupsFragment = new MapMarkersGroupsFragment();
-		}
-		if (historyFragment == null) {
-			historyFragment = new MapMarkersHistoryFragment();
 		}
 
 		FragmentManager fragmentManager = getChildFragmentManager();
@@ -192,10 +183,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 					setupLocationUpdate(false, true);
 					setupActiveFragment(GROUPS_POSITION);
 					return true;
-				} else if (i == R.id.action_history) {
-					setupLocationUpdate(false, false);
-					setupActiveFragment(HISTORY_MARKERS_POSITION);
-					return true;
 				} else if (i == R.id.action_more) {
 					showOptionsMenuFragment();
 					return true;
@@ -213,35 +200,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 		});
 
 		return mainView;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		getMyApplication().getMapMarkersHelper().addSyncListener(this);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		getMyApplication().getMapMarkersHelper().removeSyncListener(this);
-	}
-
-	@Override
-	public void onSyncStarted() {
-		switchProgressbarVisibility(true);
-	}
-
-	@Override
-	public void onSyncDone() {
-		updateAdapters();
-		switchProgressbarVisibility(false);
-	}
-
-	private void switchProgressbarVisibility(boolean visible) {
-		if (progressBar != null) {
-			progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
-		}
 	}
 
 	private void setupLocationUpdate(boolean activeFr, boolean groupsFr) {
@@ -265,17 +223,10 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 				case ACTIVE_MARKERS_POSITION:
 					activeFragment.updateAdapter();
 					groupsFragment.hideSnackbar();
-					historyFragment.hideSnackbar();
 					break;
 				case GROUPS_POSITION:
 					activeFragment.hideSnackbar();
 					groupsFragment.updateAdapter();
-					historyFragment.hideSnackbar();
-					break;
-				case HISTORY_MARKERS_POSITION:
-					activeFragment.hideSnackbar();
-					groupsFragment.hideSnackbar();
-					historyFragment.updateAdapter();
 					break;
 			}
 			viewPager.setCurrentItem(position);
@@ -289,7 +240,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 	private void updateAdapters() {
 		activeFragment.updateAdapter();
 		groupsFragment.updateAdapter();
-		historyFragment.updateAdapter();
 	}
 
 	private OsmandApplication getMyApplication() {
@@ -330,7 +280,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 		fragment.setListener(createOptionsFragmentListener());
 		Bundle args = new Bundle();
 		args.putBoolean(GROUPS_MARKERS_MENU, viewPager.getCurrentItem() == GROUPS_POSITION);
-		args.putBoolean(HISTORY_MARKERS_MENU, viewPager.getCurrentItem() == HISTORY_MARKERS_POSITION);
 		fragment.setArguments(args);
 		getChildFragmentManager().beginTransaction()
 				.add(R.id.menu_container, fragment, OptionsBottomSheetDialogFragment.TAG)
@@ -355,9 +304,6 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 					break;
 				case GROUPS_POSITION:
 					id = R.id.action_groups;
-					break;
-				case HISTORY_MARKERS_POSITION:
-					id = R.id.action_history;
 					break;
 			}
 			if (id != -1) {
@@ -542,11 +488,11 @@ public class MapMarkersDialogFragment extends DialogFragment implements OnGroupS
 
 	private class MapMarkersViewPagerAdapter extends FragmentPagerAdapter {
 
-		private final List<Fragment> fragments;
+		private final List<? extends Fragment> fragments;
 
 		MapMarkersViewPagerAdapter(FragmentManager fm) {
 			super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-			fragments = Arrays.asList(activeFragment, groupsFragment, historyFragment);
+			fragments = Arrays.asList(activeFragment, groupsFragment);
 		}
 
 		@Override

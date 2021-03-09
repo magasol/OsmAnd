@@ -76,8 +76,8 @@ import java.util.Set;
 import static net.osmand.data.FavouritePoint.BackgroundType;
 import static net.osmand.data.FavouritePoint.DEFAULT_BACKGROUND_TYPE;
 import static net.osmand.data.FavouritePoint.DEFAULT_UI_ICON_ID;
-import static net.osmand.plus.FavouritesDbHelper.FavoriteGroup.PERSONAL_CATEGORY;
-import static net.osmand.plus.FavouritesDbHelper.FavoriteGroup.isPersonalCategoryDisplayName;
+import static net.osmand.plus.FavoriteGroup.PERSONAL_CATEGORY;
+import static net.osmand.plus.FavoriteGroup.isPersonalCategoryDisplayName;
 
 public abstract class PointEditorFragmentNew extends BaseOsmAndFragment implements ColorPickerListener, CardListener {
 
@@ -187,7 +187,7 @@ public abstract class PointEditorFragmentNew extends BaseOsmAndFragment implemen
 		ImageView groupListIcon = view.findViewById(R.id.group_list_button_icon);
 		groupListIcon.setImageDrawable(app.getUIUtilities().getIcon(R.drawable.ic_action_group_select_all, activeColorResId));
 		addToHiddenGroupInfo = view.findViewById(R.id.add_hidden_group_info);
-		addToHiddenGroupInfo.setText(getString(R.string.add_hidden_group_info, getString(R.string.shared_string_my_places)));
+		addToHiddenGroupInfo.setText(getString(R.string.add_hidden_group_info, getString(R.string.shared_string_my_data)));
 		View groupList = view.findViewById(R.id.group_list_button);
 		groupList.setOnClickListener(new View.OnClickListener() {
 			@Override

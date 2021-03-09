@@ -2,9 +2,9 @@ package net.osmand.plus.mapcontextmenu.editors;
 
 import androidx.annotation.NonNull;
 
+import net.osmand.plus.FavoriteGroup;
 import net.osmand.data.FavouritePoint;
 import net.osmand.data.LatLon;
-import net.osmand.plus.FavouritesDbHelper;
 import net.osmand.plus.activities.MapActivity;
 import net.osmand.util.Algorithms;
 
@@ -51,7 +51,7 @@ public class FavoritePointEditor extends PointEditor {
 		}
 		isNew = true;
 		if (categoryName != null && !categoryName.isEmpty()) {
-			FavouritesDbHelper.FavoriteGroup category = mapActivity.getMyApplication().getFavorites()
+			FavoriteGroup category = mapActivity.getMyApplication().getFavorites()
 					.getGroup(categoryName);
 			if (category == null) {
 				mapActivity.getMyApplication().getFavorites().addEmptyCategory(categoryName, categoryColor);
