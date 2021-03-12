@@ -11,8 +11,10 @@
 	Thx - Hardy
 
 -->
-
     <string name="quick_action_show_hide_title">Show/hide</string>
+    <string name="shared_string_my_data">My data</string>
+    <string name="add_to_itinerary">Add to itinerary</string>
+    <string name="shared_string_itinerary">Itinerary</string>
     <string name="copy_poi_name">Copy POI name</string>
     <string name="track_recording_will_be_continued">The recording will be continued.</string>
     <string name="select_category_descr">Select category or add new one</string>
