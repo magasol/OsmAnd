@@ -1,5 +1,6 @@
 package net.osmand.plus.tmcplugin
 
+import android.os.Bundle
 import net.osmand.aidlapi.OsmAndCustomizationConstants
 import net.osmand.plus.ContextMenuAdapter
 import net.osmand.plus.ContextMenuAdapter.ItemClickListener
@@ -46,7 +47,7 @@ class TMCPlugin(app: OsmandApplication?) : OsmandPlugin(app) {
                                                adapter: ContextMenuAdapter, selectedObj: Any?, configureMenu: Boolean) {
         val addListener = ItemClickListener { adapter, resId, pos, isChecked, viewCoordinates ->
             if (resId == R.string.context_menu_item_tmc) {
-                //showAddParkingDialog(mapActivity, latitude, longitude)
+                showChooseLengthDialog(mapActivity, latitude, longitude)
             }
             true
         }
@@ -57,5 +58,15 @@ class TMCPlugin(app: OsmandApplication?) : OsmandPlugin(app) {
                 .setOrder(TMC_POS_ITEM_ORDER)
                 .setListener(addListener)
                 .createItem())
+    }
+
+    private fun showChooseLengthDialog(mapActivity: MapActivity?, latitude: Double, longitude: Double) {
+        val args = Bundle()
+        args.putDouble(RouteLengthBottomSheetDialogFragment.LAT_KEY, latitude)
+        args.putDouble(RouteLengthBottomSheetDialogFragment.LON_KEY, longitude)
+        val fragmentManager = mapActivity!!.supportFragmentManager
+        val fragment = RouteLengthBottomSheetDialogFragment()
+        fragment.arguments = args
+        fragment.show(fragmentManager, RouteLengthBottomSheetDialogFragment.TAG)
     }
 }
