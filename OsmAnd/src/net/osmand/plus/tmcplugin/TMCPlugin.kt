@@ -1,12 +1,18 @@
 package net.osmand.plus.tmcplugin
 
+import net.osmand.aidlapi.OsmAndCustomizationConstants
+import net.osmand.plus.ContextMenuAdapter
+import net.osmand.plus.ContextMenuAdapter.ItemClickListener
+import net.osmand.plus.ContextMenuItem.ItemBuilder
 import net.osmand.plus.OsmandApplication
 import net.osmand.plus.OsmandPlugin
 import net.osmand.plus.R
+import net.osmand.plus.activities.MapActivity
 
 class TMCPlugin(app: OsmandApplication?) : OsmandPlugin(app) {
 
     companion object {
+        const val TMC_POS_ITEM_ORDER = 10800;
         const val ID = "tmc.plugin"
         const val COMPONENT = "net.osmand.TMCPlugin"
     }
@@ -33,5 +39,23 @@ class TMCPlugin(app: OsmandApplication?) : OsmandPlugin(app) {
 
     override fun getId(): String {
         return ID
+    }
+
+    override fun registerMapContextMenuActions(mapActivity: MapActivity?,
+                                               latitude: Double, longitude: Double,
+                                               adapter: ContextMenuAdapter, selectedObj: Any?, configureMenu: Boolean) {
+        val addListener = ItemClickListener { adapter, resId, pos, isChecked, viewCoordinates ->
+            if (resId == R.string.context_menu_item_tmc) {
+                //showAddParkingDialog(mapActivity, latitude, longitude)
+            }
+            true
+        }
+        adapter.addItem(ItemBuilder()
+                .setTitleId(R.string.context_menu_item_tmc, mapActivity)
+                .setId(OsmAndCustomizationConstants.MAP_CONTEXT_MENU_TMC)
+                .setIcon(R.drawable.ic_plugin_tmc)
+                .setOrder(TMC_POS_ITEM_ORDER)
+                .setListener(addListener)
+                .createItem())
     }
 }
