@@ -107,5 +107,6 @@ public interface OsmAndCustomizationConstants {
 	String PLUGIN_PARKING_POSITION = "osmand.parking.position";
 	String PLUGIN_RASTER_MAPS = "osmand.rastermaps";
 	String PLUGIN_SKI_MAPS = "skimaps.plugin";
+	String PLUGIN_TMC= "tmc.plugin";
 	String PLUGIN_SRTM = "osmand.srtm";
 }
