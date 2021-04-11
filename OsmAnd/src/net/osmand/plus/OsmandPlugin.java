@@ -54,6 +54,7 @@ import net.osmand.plus.settings.backend.OsmandPreference;
 import net.osmand.plus.settings.fragments.BaseSettingsFragment.SettingsScreenType;
 import net.osmand.plus.skimapsplugin.SkiMapsPlugin;
 import net.osmand.plus.srtmplugin.SRTMPlugin;
+import net.osmand.plus.tmcplugin.TMCPlugin;
 import net.osmand.plus.views.OsmandMapTileView;
 import net.osmand.plus.wikipedia.WikipediaPlugin;
 import net.osmand.search.core.SearchPhrase;
@@ -284,6 +285,7 @@ public abstract class OsmandPlugin {
 		checkMarketPlugin(app, enabledPlugins, new SRTMPlugin(app));
 		checkMarketPlugin(app, enabledPlugins, new NauticalMapsPlugin(app));
 		checkMarketPlugin(app, enabledPlugins, new SkiMapsPlugin(app));
+		checkMarketPlugin(app, enabledPlugins, new TMCPlugin(app));
 		allPlugins.add(new AudioVideoNotesPlugin(app));
 		checkMarketPlugin(app, enabledPlugins, new ParkingPositionPlugin(app));
 		allPlugins.add(new OsmEditingPlugin(app));
