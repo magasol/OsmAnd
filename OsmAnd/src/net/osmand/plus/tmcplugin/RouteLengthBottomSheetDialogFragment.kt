@@ -14,7 +14,8 @@ class RouteLengthBottomSheetDialogFragment: MenuBottomSheetDialogFragment() {
     }
 
     override fun createMenuItems(savedInstanceState: Bundle?) {
-        items.add(TitleItem("Choose Route Length"))
+        val title = resources.getString(R.string.plugin_tmc_choose_route)
+        items.add(TitleItem(title))
 
         val shortRoute = SimpleBottomSheetItem.Builder()
                 .setTitle(getString(R.string.tmc_short_route_length))

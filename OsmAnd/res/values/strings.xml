@@ -4109,5 +4109,6 @@
     <string name="tmc_short_route_length">20 km</string>
     <string name="tmc_medium_route_length">40 km</string>
     <string name="tmc_long_route_length">60 km</string>
+    <string name="plugin_tmc_choose_route">Choose Route Length</string>
 
 </resources>

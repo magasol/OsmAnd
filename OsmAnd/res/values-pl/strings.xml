@@ -4004,4 +4004,5 @@
 	<string name="plugin_tmc_descr">Plugin rozwijany w ramach przedmiotu uczelnianego Technologie Map Cyfrowych.</string>
     <string name="plugin_tmc_name">TMC Plugin</string>
     <string name="context_menu_item_tmc">Zaproponuj trasę</string>
+    <string name="plugin_tmc_choose_route">Wybierz długość trasy</string>
 </resources>
