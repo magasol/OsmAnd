@@ -4105,7 +4105,7 @@
     <string name="voice_prompts_timetable">Voice prompts times</string>
     <string name="plugin_tmc_descr">Plugin developed for university course Digital Maps Technologies.</string>
     <string name="plugin_tmc_name">TMC Plugin</string>
-    <string name="context_menu_item_tmc">TMC</string>
+    <string name="context_menu_item_tmc">Propose Route</string>
     <string name="tmc_short_route_length">20 km</string>
     <string name="tmc_medium_route_length">40 km</string>
     <string name="tmc_long_route_length">60 km</string>
