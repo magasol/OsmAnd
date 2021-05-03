@@ -1691,6 +1691,8 @@ public class QuickSearchDialogFragment extends DialogFragment implements OsmAndC
 
 	private void runCoreSearchInternal(String text, boolean showQuickResult, boolean searchMore,
 									   final SearchResultListener resultListener) {
+		//magic ten search
+		System.out.println("logger the one "+text);
 		searchUICore.search(text, showQuickResult, new ResultMatcher<SearchResult>() {
 			SearchResultCollection regionResultCollection = null;
 			SearchCoreAPI regionResultApi = null;
@@ -1817,6 +1819,7 @@ public class QuickSearchDialogFragment extends DialogFragment implements OsmAndC
 						if (SearchUICore.isDebugMode()) {
 							LOG.info("UI >> Appending API results <" + phrase + "> API=<" + searchApi + "> Result collection=" + getSearchResultCollectionFormattedSize(getResultCollection()));
 						}
+						// magic api result maja wyniki
 						getResultCollection().addSearchResults(apiResults, true, true);
 						if (SearchUICore.isDebugMode()) {
 							LOG.info("UI >> API results appended <" + phrase + "> API=<" + searchApi + "> Result collection=" + getSearchResultCollectionFormattedSize(getResultCollection()));
