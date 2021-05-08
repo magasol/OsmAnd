@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import net.osmand.Location
 import net.osmand.ResultMatcher
 import net.osmand.data.LatLon
 import net.osmand.plus.OsmandApplication
 import net.osmand.plus.R
-import net.osmand.plus.activities.MapActivity
 import net.osmand.plus.base.MenuBottomSheetDialogFragment
 import net.osmand.plus.base.bottomsheetmenu.SimpleBottomSheetItem
 import net.osmand.plus.base.bottomsheetmenu.simpleitems.TitleItem
@@ -17,7 +15,6 @@ import net.osmand.search.SearchUICore
 import net.osmand.search.core.ObjectType
 import net.osmand.search.core.SearchCoreAPI
 import net.osmand.search.core.SearchResult
-import net.osmand.util.MapUtils
 import java.util.*
 
 class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
@@ -28,8 +25,6 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
     }
 
     private var app: OsmandApplication? = null
-    private var centerLatLon: LatLon? = null
-    private var location: Location? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,32 +34,9 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val mapActivity = activity as MapActivity
-
         // Setup search core
-        val locale = app!!.settings.MAP_PREFERRED_LOCALE.get()
-        val transliterate = app!!.settings.MAP_TRANSLITERATE_NAMES.get()
         val searchHelper = app?.searchUICore
         searchUICore = searchHelper?.core
-
-        location = app?.locationProvider?.lastKnownLocation;
-        var searchLatLon: LatLon
-        if (centerLatLon == null) {
-            val clt: LatLon = mapActivity.mapView.currentRotatedTileBox.centerLatLon
-            searchLatLon = clt
-            if (location != null) {
-                val d = MapUtils.getDistance(clt, location!!.latitude, location!!.longitude)
-                if (d < 70000) {
-                    searchLatLon = LatLon(location!!.latitude, location!!.longitude)
-                }
-            }
-        } else {
-            searchLatLon = centerLatLon as LatLon
-        }
-        var settings = searchUICore!!.searchSettings.setOriginalLocation(
-                LatLon(searchLatLon.latitude, searchLatLon.longitude))
-        settings = settings.setLang(locale, transliterate)
-        searchUICore!!.updateSettings(settings)
 
         return super.onCreateView(inflater, parent, savedInstanceState)
     }
@@ -72,7 +44,18 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
     override fun createMenuItems(savedInstanceState: Bundle?) {
         val longitude = arguments?.getDouble(LON_KEY, 0.0)
         val latitude = arguments?.getDouble(LAT_KEY, 0.0)
-        this.centerLatLon = LatLon(latitude!!, longitude!!)
+        val location = LatLon(latitude!!, longitude!!)
+
+
+        val locale = app!!.settings.MAP_PREFERRED_LOCALE.get()
+        val transliterate = app!!.settings.MAP_TRANSLITERATE_NAMES.get()
+
+        val searchLatLon = LatLon(location.latitude, location.longitude)
+
+        var settings = searchUICore!!.searchSettings.setOriginalLocation(
+                LatLon(searchLatLon.latitude, searchLatLon.longitude))
+        settings = settings.setLang(locale, transliterate)
+        searchUICore!!.updateSettings(settings)
 
 
         val title = resources.getString(R.string.plugin_tmc_choose_route)
@@ -106,18 +89,28 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
 
 
     private fun magic() {
-//        open fun runCoreSearchInternal(text: String, showQuickResult: Boolean, searchMore: Boolean,
-//                                       resultListener: SearchResultListener?) {
-        //magic ten search
+        // filtry tutaj magic
+        val helper = app?.poiFilters
+        val filter = helper?.getFilterById("user_custom_id");
+        val poiCategory = app!!.poiTypes.getCategories(false)[19]
+
+
+        filter?.selectSubTypesToAccept(poiCategory, linkedSetOf("attraction"))
+        val sr = SearchResult(searchUICore?.phrase)
+        sr.localeName = filter?.name
+        sr.`object` = filter
+        sr.priority = 0.0
+        sr.objectType = ObjectType.POI_TYPE
+        searchUICore!!.selectSearchResult(sr)
+
         val settings = searchUICore!!.searchSettings
-                .setSearchTypes(ObjectType.CITY)
                 .setEmptyQueryAllowed(true)
                 .setSortByName(false)
                 .setRadiusLevel(1)
 
         searchUICore!!.updateSettings(settings)
 
-        searchUICore?.search("", false, object : ResultMatcher<SearchResult?> {
+        searchUICore?.search("Tourist attraction ", false, object : ResultMatcher<SearchResult?> {
             var regionResultCollection: SearchUICore.SearchResultCollection? = null
             var regionResultApi: SearchCoreAPI? = null
             var results: MutableList<SearchResult> = ArrayList()
