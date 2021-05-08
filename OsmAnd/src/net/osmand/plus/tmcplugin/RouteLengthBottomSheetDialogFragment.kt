@@ -32,6 +32,7 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
         app = myApplication
 
     }
+
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         // Setup search core
@@ -65,8 +66,9 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
                 .setTitle(getString(R.string.tmc_short_route_length))
                 .setLayoutId(R.layout.bottom_sheet_item_simple_right_icon)
                 .setOnClickListener {
-                    magic()
                     println("logger shortRoute lon $longitude lat $latitude")
+                    findAttractionoNearby()
+
                 }
                 .create()
         items.add(shortRoute)
@@ -74,22 +76,28 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
         val mediumRoute = SimpleBottomSheetItem.Builder()
                 .setTitle(getString(R.string.tmc_medium_route_length))
                 .setLayoutId(R.layout.bottom_sheet_item_simple_right_icon)
-                .setOnClickListener { println("logger mediumRoute lon $longitude lat $latitude") }
+                .setOnClickListener {
+                    println("logger mediumRoute lon $longitude lat $latitude")
+                    findAttractionoNearby()
+                }
                 .create()
         items.add(mediumRoute)
 
         val longRoute = SimpleBottomSheetItem.Builder()
                 .setTitle(getString(R.string.tmc_long_route_length))
                 .setLayoutId(R.layout.bottom_sheet_item_simple_right_icon)
-                .setOnClickListener { println("logger longRoute lon $longitude lat $latitude") }
+                .setOnClickListener {
+                    println("logger longRoute lon $longitude lat $latitude")
+                    findAttractionoNearby()
+                }
                 .create()
         items.add(longRoute)
     }
+
     private var searchUICore: SearchUICore? = null
 
 
-    private fun magic() {
-        // filtry tutaj magic
+    private fun findAttractionoNearby() {
         val helper = app?.poiFilters
         val filter = helper?.getFilterById("user_custom_id");
         val poiCategory = app!!.poiTypes.getCategories(false)[19]
@@ -136,7 +144,7 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
                         regionResultApi = null
                         regionResultCollection = null
                         results = ArrayList()
-                        if(apiResults.isNotEmpty()) {
+                        if (apiResults.isNotEmpty()) {
                             println("logger pierwsze 10 z ${apiResults.size}: ")
                             val first10 = apiResults.subList(0, minOf(10, apiResults.size))
                             first10.forEach { println("logger ${it.localeName} (${it.location.latitude}, ${it.location.latitude}) ") }
