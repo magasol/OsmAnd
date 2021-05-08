@@ -136,9 +136,12 @@ class RouteLengthBottomSheetDialogFragment : MenuBottomSheetDialogFragment() {
                         regionResultApi = null
                         regionResultCollection = null
                         results = ArrayList()
-                        print("logger lista: ")
-                        apiResults.forEach { print(" ${it.localeName}; ") }
-                        println()
+                        if(apiResults.isNotEmpty()) {
+                            println("logger pierwsze 10 z ${apiResults.size}: ")
+                            val first10 = apiResults.subList(0, minOf(10, apiResults.size))
+                            first10.forEach { println("logger ${it.localeName} (${it.location.latitude}, ${it.location.latitude}) ") }
+                            println()
+                        }
                     }
                     else -> results.add(`object`!!)
                 }
